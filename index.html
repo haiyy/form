@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body ng-app='myangular' ng-controller='myangular'>
+  <div class="warp">
+     <button class="log" ng-click="getTab('log')">登录</button>
+     <button class="reg" ng-click="getTab('reg')">注册</button>
+     <form method="get" accept-charset="utf-8" ng-show="log">
+       <label for='user'>
+          用户名：
+          <input type="text" name="user" placeholder="请输入用户名" ng-model='user' required>
+       </label>
+       <label for='password'>
+          密码：
+          <input type="password" name="password" placeholder="请输入密码" ng-model='password' ng-minlength="6" require >
+       </label>
+        <label>
+          <input type="submit" class="btn" value="登录" ng-click="Log()">
+        </label>
+     </form>
+      <form method="get" accept-charset="utf-8" ng-show="reg">
+       <label>
+          用户名：
+          <input type="text" name="username" placeholder="请注册用户名" ng-model='username' required>
+       </label>
+       <label for='phone'>
+          手机号：
+          <input type="text" name="phone" placeholder="请输入手机号" ng-model='phone' ng-pattern="/^1[3|4|5|8][0-9]\d{1,10}$/" required>
+       </label>
+       <label for='pas'>
+          密码：
+          <input type="password" name="pas" placeholder="请输入密码" ng-model='pas' ng-minlength="6" required>
+       </label>
+       <label for='pass'>
+          确认密码：
+          <input type="password" name="pass" placeholder="确认密码" ng-model='pass' ng-minlength="6" required>
+       </label>
+       <label for='code'>
+          请输入验证码：
+          <input type="text" name="code" placeholder="请输入验证码" ng-model='code' required>
+       </label>
+       <span>{{cod}}</span>
+       <label>
+          <input type="submit" class="btn" value="注册" ng-click="Reg()">
+        </label >
+     </form>
+   </div>
+    <script type="text/javascript" src="angular/angular.js"></script>
+    <script type="text/javascript">
+         var user=document.getElementsByName('user')[0];
+         var password=document.getElementsByName('password')[0];
+         var username=document.getElementsByName('username')[0];
+         var phone=document.getElementsByName('phone')[0];
+         var pas=document.getElementsByName('pas')[0];
+         var pass=document.getElementsByName('pass')[0];
+         var code=document.getElementsByName('code')[0];
+         var userreg=/^[\u4e00-\u9fa5]+$/;
+         var pawreg=/^\w{8,12}$/;
+         var phonereg=/^1[3|4|5|8][0-9]\d{1,10}$/;
+         var app=angular.module("myangular",[]);
+         app.controller('myangular',function($scope){
+            $scope.log=true;
+            $scope.reg=false;
+            $scope.user="yy";
+            $scope.cod='zxcv';
+            $scope.getTab=function(tab){
+                  if(tab=='log'){
+                     $scope.log=true;
+                     $scope.reg=false;
+                  }else if(tab=='reg'){
+                     $scope.log=false;
+                     $scope.reg=true;
+                  }
+            }
+            $scope.Log=function(){
+                var Name=window.sessionStorage.getItem('user');
+                var passwordv=window.sessionStorage.getItem('password');
+                if(user.value==Name||password.value==passwordv){
+                    alert("登录成功")
+                }else{
+                  alert("登录失败")
+                }
+            }
+            $scope.Reg=function(){
+               var userv=username.value;
+               var pasv=pas.value;
+               var passv=pass.value;
+               var phonev=phone.value
+               var str="";
+               if(!userreg.test(userv)){
+                 str="你输入的用户名有误"
+               }else if(!phonereg.test(phonev)){
+                 str="你输入的手机号格式有误"
+               }else if(!pawreg.test(pasv)){
+                 str="你输入的密码格式有误"
+               }else if(pasv!=passv){
+                 str="两次密码格式必须一至"
+               }else if(code.value!=$scope.cod){
+                 str="验证码有误"
+               }else{
+                  str="";
+               }
+               if(str){
+                  alert(str)
+               }else{
+                  window.sessionStorage.setItem("user",userv);
+                  window.sessionStorage.setItem("password",pasv);
+                  alert("注册成功,请登录");
+                  userv="";
+                  pasv="";
+                  passv="";
+                  phonev="";
+                  code.value="";
+                  $scope.log=true;
+                  $scope.reg=false;
+               }
+            }
+         })
+
+    </script>
+</body>
+</html>
